@@ -38,7 +38,7 @@ Reading Helper solves information overload for serious learners, researchers, an
 
 ## Card Anatomy & Design Principles
 
-Every extracted knowledge card follows a strictly structured schema defined in [`CardDraft`](file:///backend/src/rh_ingest/llm/schemas.py):
+Every extracted knowledge card follows a strictly structured schema defined in [`CardDraft`](backend/src/rh_ingest/llm/schemas.py):
 
 ```mermaid
 classDiagram
@@ -87,14 +87,14 @@ flowchart TD
     I --> J["Atomic Publisher\n(Writes library contract cards.json, sources.json, topics.json)"]
 ```
 
-- **Crash Resilience:** Every chunk extraction and merge operation is tracked in a SQLite WAL database ([`work.db`](file:///backend/src/rh_ingest/workdb.py)). If the system crashes or restarts, resuming skips completed chunks.
-- **Process Safety:** A cross-process lock ([`FileLock`](file:///backend/src/rh_ingest/lock.py)) prevents concurrent writes to the library.
+- **Crash Resilience:** Every chunk extraction and merge operation is tracked in a SQLite WAL database ([`work.db`](backend/src/rh_ingest/workdb.py)). If the system crashes or restarts, resuming skips completed chunks.
+- **Process Safety:** A cross-process lock ([`FileLock`](backend/src/rh_ingest/lock.py)) prevents concurrent writes to the library.
 
 ---
 
 ## Model Testing & Comparison Utility
 
-When configuring local or cloud LLMs, selecting the right model, temperature, and prompt format is critical. Reading Helper includes an inspection and comparison tool available via the CLI (`rh test-model`) and as a standalone script ([`backend/scripts/test_model.py`](file:///backend/scripts/test_model.py)).
+When configuring local or cloud LLMs, selecting the right model, temperature, and prompt format is critical. Reading Helper includes an inspection and comparison tool available via the CLI (`rh test-model`) and as a standalone script ([`backend/scripts/test_model.py`](backend/scripts/test_model.py)).
 
 ### Why Use It?
 - **Verify Card Quality:** See cards formatted in real-time in Rich terminal panels.
@@ -191,7 +191,7 @@ uv run rh mock-server --port 8801
 ## Repository Structure
 
 ```
-reading_helper/
+readwise/
 ├── README.md                   # This root documentation
 ├── WORKLOG.md                  # Development trajectory and milestone log
 ├── .gitignore                  # Git ignore rules for build, test, and synced assets
@@ -242,11 +242,11 @@ reading_helper/
 
 ```bash
 # Clone the repository
-git clone <repo-url> reading_helper
-cd reading_helper/backend
+git clone https://github.com/pratyaxsh/readwise.git
+cd readwise/backend
 
-# Create virtual environment and sync dependencies
-uv sync
+# Create virtual environment and sync dependencies (dev extra adds pytest, ruff and the mock server)
+uv sync --extra dev
 ```
 
 ### 2. Configure Settings
@@ -277,7 +277,7 @@ Settings are resolved with the following priority:
 3. Default user configuration at `~/.config/reading-helper/config.yaml`
 4. Built-in defaults
 
-Key configuration parameters ([`config.example.yaml`](file:///backend/config.example.yaml)):
+Key configuration parameters ([`config.example.yaml`](backend/config.example.yaml)):
 
 ```yaml
 library_dir: "/data/Sync/library"           # Synced library folder read by web/mobile
